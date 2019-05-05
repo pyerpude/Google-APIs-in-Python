@@ -134,34 +134,65 @@ def process_file(file):
 	#drive_files = 'Drive_files'
 	#local_path = os.path.join(local_path, drive_files)
 	
-	global full_path
-	global fileHandler
-	fileHandler = open(local_path +'google_drive_manifest.txt',"a")
-	print("File ID: ",file['id'])
-	sheet = sheet_service.open_by_key(file['id'])
+	sheet = open_sheet(file['id'])
+	if sheet is None:
+		print("Unable to open sheet: " + file['id'])
+		return
 	for tab in tab_name:
-		worksheet = sheet.worksheet(tab)
-		all_values = worksheet.get_all_values()
+		sheetId = sheet.worksheet(tab)._properties['sheetId']
+		body = {
+		  "requests": [
+			{
+			  "updateCells": {
+				"range": {
+				  "sheetId": sheetId,
+				  "startRowIndex": 0,
+				  "startColumnIndex": 0
+				},
+				"rows": [
+				  {
+					"values": [
+					  {
+						"userEnteredFormat": {
+						  "wrapStrategy": "OVERFLOW_STRATEGY"
+						}
+					  }
+					]
+				  }
+				],
+				"fields": "userEnteredFormat.wrapStrategy"
+			  }
+			}
+		  ]
+		}
+		res = sheet.batch_update(body)
 		csvfile = os.path.join(temp_folder, tab+".csv")
-		full_path = os.path.join(local_path, tab+".csv", file['id'])
-		print(full_path)
-		if os.path.isfile(csvfile):
-			all_values.pop(0) # remove header
-		with open(csvfile, 'a') as f:
-			writer = csv.writer(f, delimiter='\325')
-			writer.writerows(all_values)
-		fileHandler.write(full_path + "\n")
-		time.sleep(6)
-	#fileHandler = open(local_path +'/google_drive_manifest.txt',"a")
-	#print("Manifest file created")
-	#print(full_path, file['id'])
-	fileHandler.close()
-	#fileHandler = open(local_path +'/google_drive_manifest.txt',"a")
-	#print("Manifest file created")
-	#print(full_path, file['id'])
-	#fileHandler.close()
+		full_path = os.path.join(csvfile, file['id'])
+		print("Processing tab", full_path)
+		for retry in range(5):
+			try:
+				worksheet = sheet.worksheet(tab)
+				all_values = worksheet.get_all_values()
+				if os.path.isfile(csvfile):
+					all_values.pop(0) # remove header
+				with open(csvfile, 'a') as f:
+					writer = csv.writer(f, delimiter='\325')
+					writer.writerows(all_values)
+				break
+			except Exception as e:
+				print(e)
+				if retry == 4:
+					print("Unable to process tab: " + tab + " of sheet: " + file['id'])
+				else:
+					print("Retrying tab: " + tab + " of sheet: " + file['id'])
+				time.sleep(60)
+				sheet_service.login()
+				sheet = open_sheet(file['id'])
+				continue
+		time.sleep(2)
+	print("Sheet processed " + file['id'])
 	
-    if remove_flag == 'Y':
+	if remove_flag == 'Y':
 		remove_file_from_gdrive(file)
 		print(file['name'] + ' removed')
 	if archive_flag == 'Y':
