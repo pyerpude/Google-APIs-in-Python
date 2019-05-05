@@ -154,7 +154,7 @@ def process_file(file):
 					"values": [
 					  {
 						"userEnteredFormat": {
-						  "wrapStrategy": "OVERFLOW_STRATEGY"
+						  "wrapStrategy": "OVERFLOW_CELL"
 						}
 					  }
 					]
