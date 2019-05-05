@@ -173,6 +173,7 @@ def process_file(file):
 			try:
 				worksheet = sheet.worksheet(tab)
 				all_values = worksheet.get_all_values()
+				all_values = [[s.encode("utf-8").replace("\n"," ").replace("\r"," ") for s in nested] for nested in all_values]
 				if os.path.isfile(csvfile):
 					all_values.pop(0) # remove header
 				with open(csvfile, 'a') as f:
