@@ -11,3 +11,4 @@ For example, if there are 5 similar google sheets having 7 tabs(different sheets
 Command to use: 
 python scanDriveFolder_google_sheet.py <source_drive_id> <dest_server_path> <tab_name or prefix> <remove_flag> <archive_flag>
 
+Example is included in the image uploaded : sample1 and sample2
