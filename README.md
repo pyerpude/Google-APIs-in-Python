@@ -26,3 +26,4 @@ Examples:
 - This python script is meant to download data from google sheets which has multiple tabs/sheets inside a single google sheet
 - You can specify what tab to download with a comma separated values like Sheet1, Sheet2 and it will create two csvs as a result i.e Sheet1.csv and Sheet2.csv
 - Tab name/Sheet name is mandatory in the input since a single google sheet can contain multiple tabs and you might want to download only specific tabs' data
+- The script contains creation of manifest file in a destination directory, it contains the file path with the file name of the destination, so you can automate a load of this csv to any other destination like a google cloud storage bucket or an s3 bucket. The next process can then read manifest file and pick up those files from local machine/server and move it to your ultimate destination.
