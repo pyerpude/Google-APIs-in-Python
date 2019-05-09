@@ -21,3 +21,8 @@ Examples:
   - Included in the images attached
   - Input is the google drive/team drive folder ID
   - The result is a consolidated csv called Sheet1.csv which has 'Sheet1' data from all google sheets
+
+# Important Notes: 
+- This python script is meant to download data from google sheets which has multiple tabs/sheets inside a single google sheet
+- You can specify what tab to download with a comma separated values like Sheet1, Sheet2 and it will create two csvs as a result i.e Sheet1.csv and Sheet2.csv
+- Tab name/Sheet name is mandatory in the input since a single google sheet can contain multiple tabs and you might want to download only specific tabs' data
