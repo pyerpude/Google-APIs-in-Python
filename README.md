@@ -13,9 +13,9 @@ python scanDriveFolder_google_sheet.py <source_drive_id> <dest_server_path> <tab
 
 Examples: 
 1. Single google sheet 
-   - Included in the images attached 
-   - Input is a GUID of that google sheet
-   - The result is a Sheet1.csv stored in destination directory
+  - Included in the images attached 
+  - Input is a GUID of that google sheet
+  - The result is a Sheet1.csv stored in destination directory
    
 2. Multiple google sheets stored in a drive/team drive
   - Included in the images attached
